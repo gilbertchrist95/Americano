@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "299461365122",
+    "project_id": "americano-d1727",
+    "storage_bucket": "americano-d1727.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:299461365122:android:5004c43fd0971d2733d39b",
+        "android_client_info": {
+          "package_name": "com.mokapos.americano"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "299461365122-l378t409c2hit192dhmb961avjpuau35.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJOZQTordcyulOpwwxEt2JfhYUj0AmSUs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "299461365122-l378t409c2hit192dhmb961avjpuau35.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
