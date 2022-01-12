@@ -26,11 +26,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.mokapos.americano.data.Product
 import com.mokapos.americano.ui.theme.AmericanoTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -77,40 +80,47 @@ fun tabs(viewModel: MainViewModel) {
     }
 }
 
+@ExperimentalCoilApi
 @Composable
 fun productList(viewModel: MainViewModel) {
     val products: List<Product> by viewModel.getProducts().observeAsState(listOf())
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White),
-        contentPadding = PaddingValues(horizontal = 16.dp)
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
+        onRefresh = { viewModel.refresh() }
     ) {
-        items(products) { product ->
-            Row(
-                modifier = Modifier.padding(vertical = 8.dp)
-            ) {
-                Image(
-                    painter = rememberImagePainter(data = "https://picsum.photos/200"),
-                    contentDescription = product.image,
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(CircleShape)                       // clip to the circle shape
-                        .border(2.dp, Color.Gray, CircleShape)
-                )
-                Column(
-                    modifier = Modifier.padding(start = 12.dp)
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White),
+            contentPadding = PaddingValues(horizontal = 16.dp)
+        ) {
+            items(products) { product ->
+                Row(
+                    modifier = Modifier.padding(vertical = 8.dp)
                 ) {
-                    Text(
-                        text = product.name,
-                        modifier = Modifier.padding(bottom = 8.dp),
-                        fontWeight = FontWeight.Medium
+                    Image(
+                        painter = rememberImagePainter(data = "https://picsum.photos/200"),
+                        contentDescription = product.image,
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(CircleShape)                       // clip to the circle shape
+                            .border(2.dp, Color.Gray, CircleShape)
                     )
-                    Text(
-                        text = """${"$"}${product.price}""",
-                        fontFamily = FontFamily.Monospace
-                    )
+                    Column(
+                        modifier = Modifier.padding(start = 12.dp)
+                    ) {
+                        Text(
+                            text = product.name,
+                            modifier = Modifier.padding(bottom = 8.dp),
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = """${"$"}${product.price}""",
+                            fontFamily = FontFamily.Monospace
+                        )
+                    }
                 }
             }
         }
@@ -118,9 +128,6 @@ fun productList(viewModel: MainViewModel) {
 }
 
 //https://picsum.photos/200
-
-
-
 @ExperimentalPagerApi
 @Composable
 fun tabWithSwiping() {

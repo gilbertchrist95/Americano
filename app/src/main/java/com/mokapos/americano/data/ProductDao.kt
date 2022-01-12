@@ -22,4 +22,7 @@ interface ProductDao {
 
     @Query("SELECT * FROM product")
     fun getAll(): List<Product>
+
+    @Query("UPDATE product SET name =:to WHERE name=:from")
+    fun updateName(from: String, to: String)
 }

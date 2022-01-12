@@ -9,6 +9,10 @@ import com.mokapos.americano.data.ProductRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,10 +21,22 @@ class MainViewModel @Inject constructor(
     private val productRepository: ProductRepository
 ) : ViewModel() {
 
+    private var _isRefreshing = MutableStateFlow(false)
+
+    val isRefreshing: StateFlow<Boolean>
+        get() = _isRefreshing.asStateFlow()
+
+    fun refresh() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _isRefreshing.emit(true)
+            delay(1000)
+            productMutableLiveData.postValue(productRepository.getAll())
+            _isRefreshing.emit(false)
+        }
+    }
+
     private var productMutableLiveData = MutableLiveData<List<Product>>()
     fun getProducts(): LiveData<List<Product>> = productMutableLiveData
-
-
 
     fun populateData() {
         viewModelScope.launch(Dispatchers.IO) {
